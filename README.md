@@ -135,6 +135,8 @@ Your app is ready to be deployed!
 
 #### `npm run upload`
 
+NOTE: This can command will guide you through generating an Access Token which can then be copy/pasted into the repository secret for the github workflow.
+
 Uploads the `dist` folder to Contentful and creates a bundle that is automatically activated.
 The command guides you through the deployment process and asks for all required arguments.
 Read [here](https://www.contentful.com/developers/docs/extensibility/app-framework/create-contentful-app/#deploy-with-contentful) for more information about the deployment process.
