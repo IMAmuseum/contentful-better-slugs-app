@@ -1,3 +1,4 @@
+import React from 'react';
 import { ConfigAppSDK } from "@contentful/app-sdk";
 import {
   Accordion,
@@ -20,7 +21,7 @@ import {
 } from "@contentful/f36-components";
 import { PlusIcon } from "@contentful/f36-icons";
 import { useCMA, useSDK } from "@contentful/react-apps-toolkit";
-import { css } from "emotion";
+import { css } from "@emotion/css";
 import { useCallback, useEffect, useReducer, useState } from "react";
 import SlugFieldsDropdown from "../components/SlugFieldsDropdown";
 import ContentModelsDropdown from "../components/ContentModelsDropdown";
@@ -348,7 +349,7 @@ const ConfigScreen = () => {
 
               <FormControl>
                 <FormControl.Label>
-                  Show Website URL (slug path prefix)
+                  Show Website URL (or slug path prefix)
                 </FormControl.Label>
                 <Switch
                   name="lock-when-published"
@@ -364,7 +365,7 @@ const ConfigScreen = () => {
                   {parameters.showPathPrefix ? "Yes" : "No"}
                 </Switch>
                 <FormControl.HelpText>
-                  If enabled, the path prefix value (website url) will be
+                  If enabled, the website url value (or path prefix) will be
                   displayed in same line of the slug input field.
                 </FormControl.HelpText>
               </FormControl>

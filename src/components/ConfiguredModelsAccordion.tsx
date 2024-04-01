@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Accordion,
   ButtonGroup,
@@ -7,7 +8,7 @@ import {
 import { useSDK } from "@contentful/react-apps-toolkit";
 import { DeleteIcon, EditIcon } from "@contentful/f36-icons";
 import { ConfigAppSDK } from "@contentful/app-sdk";
-import { css } from "emotion";
+import { css } from "@emotion/css";
 import { IContentModel } from "../locations/ConfigScreen";
 
 interface IConfiguredModelsAccordion {

@@ -1,5 +1,6 @@
 import { FieldAppSDK } from "@contentful/app-sdk";
 import {
+  Button,
   IconButton,
   Note,
   Stack,
@@ -8,14 +9,14 @@ import {
 } from "@contentful/f36-components";
 import tokens from "@contentful/f36-tokens";
 import { CycleIcon, ExternalLinkIcon, CopyIcon } from "@contentful/f36-icons";
-import { useSDK, useCMA } from "@contentful/react-apps-toolkit";
-import { css } from "emotion";
-import { useEffect, useRef, useState } from "react";
+import { useSDK } from "@contentful/react-apps-toolkit";
+import { css } from "@emotion/css";
+import React, { useEffect, useRef, useState } from "react";
 import slugify from "@sindresorhus/slugify";
 
 const Field = () => {
   const sdk = useSDK<FieldAppSDK>();
-  const cma = useCMA();
+  const cma = sdk.cma;
   const debounceInterval: any = useRef(false);
   const detachExternalChangeHandler: any = useRef(null);
   const isLoaded: any = useRef(false);
@@ -29,9 +30,11 @@ const Field = () => {
     (field) => field.id === sdk.field.id
   )?.localized;
 
+  const [prevPubSlug, setPrevPubSlug] = useState<string>('');
+
   const {
-    paths,
-    models,
+    paths = [],
+    models = [],
     pathPrefix = "",
     showPathPrefix = true,
     lockWhenPublished = false,
@@ -43,8 +46,17 @@ const Field = () => {
     preserveCharacters = [],
   } = sdk.parameters.installation;
 
-  const { showWebsiteUrl = true, showPreviewUrl = true } =
-    sdk.parameters.instance;
+  let overridePathPrefix = pathPrefix;
+
+  const {
+    showWebsiteUrl = true,
+    showPreviewUrl = true,
+    instancePathPrefix = ""
+  } = sdk.parameters.instance;
+
+  if (instancePathPrefix) {
+    overridePathPrefix = instancePathPrefix;
+  }
 
   const slugOptions: any = {
     preserveLeadingUnderscore,
@@ -70,6 +82,17 @@ const Field = () => {
       fields.push(part.replace("field:", ""));
     }
   });
+
+  // get currently published slug via snapshots, not CDA (too slow)
+  // listen for publish to get new currently published slug
+  useEffect(() => {
+    sdk.entry.onSysChanged(async (sys) => {
+      const snapshots = await sdk.cma.snapshot.getManyForEntry({ entryId: sdk.entry.getSys().id});
+      const published = snapshots.items[0].snapshot;
+      const publishedSlug = published.fields[sdk.field.id];
+      setPrevPubSlug(publishedSlug[sdk.field.locale] ? String(publishedSlug[sdk.field.locale]) : '');
+    })
+  }, []);
 
   useEffect(() => {
     sdk.window.startAutoResizer();
@@ -146,14 +169,11 @@ const Field = () => {
     locale: string
   ) => {
     const defaultLocale = sdk.locales.default;
-    console.log(fieldName, sdk.entry.fields[fieldName]);
     if (!sdk.entry.fields[fieldName]) {
       return "";
     }
 
-    const referenceLocale = sdk.entry.fields[fieldName]?.locales.includes(
-      locale
-    )
+    const referenceLocale = sdk.entry.fields[fieldName]?.locales.includes(locale)
       ? locale
       : defaultLocale;
 
@@ -186,15 +206,22 @@ const Field = () => {
     return "";
   };
 
+  const isPublished = () => {
+    const sys: any = sdk.entry.getSys();
+    return !!sys.publishedVersion && sys.version === sys.publishedVersion + 1;
+  };
+
+  // slug can be changed if previous published slug was empty
+  // or if the entry is not currently published.
+  const canBeChanged = () => {
+    return !isPublished() || prevPubSlug === '';
+  };
+
   const isLocked = () => {
     const sys: any = sdk.entry.getSys();
+    const changed = !!sys.publishedVersion && sys.version >= sys.publishedVersion + 2;
 
-    const published =
-      !!sys.publishedVersion && sys.version == sys.publishedVersion + 1;
-    const changed =
-      !!sys.publishedVersion && sys.version >= sys.publishedVersion + 2;
-
-    return published || changed;
+    return isPublished() || changed;
   };
 
   const updateSlug = async (locale: string, force = false) => {
@@ -298,20 +325,26 @@ const Field = () => {
   return (
     <Stack flexDirection="column" alignItems="flex-start">
       <TextInput.Group>
-        {(showPathPrefix || showWebsiteUrl) && pathPrefix?.length > 0 && (
-          <TextInput
-            aria-label="Slug"
-            id="slug-prefix"
+        {(showPathPrefix || showWebsiteUrl) && overridePathPrefix?.length > 0 && (
+          <Button
+            isActive
             isDisabled
-            value={pathPrefix}
-            className={css({ fontSize: tokens.fontSizeS, maxWidth: "175px" })}
-          />
+            id="slug-prefix"
+            className={css({
+              fontSize: tokens.fontSizeS,
+              color: 'black !important',
+              maxWidth: "175px",
+            })}
+          >
+            {overridePathPrefix}
+          </Button>
         )}
         <TextInput
           aria-label="Slug"
           id={sdk.field.id}
           value={value || ""}
           onChange={onInputChange}
+          isDisabled={!canBeChanged()}
           isRequired
         />
         <IconButton
@@ -325,7 +358,7 @@ const Field = () => {
             variant="secondary"
             icon={<CopyIcon />}
             onClick={() =>
-              navigator.clipboard.writeText(`${pathPrefix}/${value}`)
+              navigator.clipboard.writeText(`${overridePathPrefix}/${value}`)
             }
             aria-label="Copy slug value to clipboard"
           />
@@ -333,16 +366,16 @@ const Field = () => {
       </TextInput.Group>
 
       {(showPreviewLink || showPreviewUrl) &&
-        pathPrefix?.length > 0 &&
+        overridePathPrefix?.length > 0 &&
         value && (
           <TextLink
-            href={`${pathPrefix}/${value}`}
+            href={`${overridePathPrefix}/${value}`}
             target="_blank"
             className={css({ fontSize: tokens.fontSizeS, marginTop: -10 })}
             icon={<ExternalLinkIcon size="tiny" />}
             alignIcon="end"
           >
-            {`${pathPrefix}/${value}`}
+            {`${overridePathPrefix}/${value}`}
           </TextLink>
         )}
     </Stack>

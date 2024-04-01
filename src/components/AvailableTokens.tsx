@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Flex,
   IconButton,
@@ -8,7 +9,7 @@ import {
 import { CopyIcon } from "@contentful/f36-icons";
 import { useCMA } from "@contentful/react-apps-toolkit";
 
-import { css } from "emotion";
+import { css } from "@emotion/css";
 import { useEffect, useState } from "react";
 
 const defaultTokens = {

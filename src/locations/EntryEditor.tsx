@@ -1,3 +1,4 @@
+import React from 'react';
 import { EditorAppSDK } from '@contentful/app-sdk';
 import { Paragraph } from '@contentful/f36-components';
 import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit';

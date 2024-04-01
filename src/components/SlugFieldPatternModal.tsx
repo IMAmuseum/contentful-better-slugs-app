@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Button,
   Modal,
@@ -9,7 +10,7 @@ import { useSDK } from "@contentful/react-apps-toolkit";
 import { useState } from "react";
 import AvailableTokens, { insertToken } from "./AvailableTokens";
 import { ConfigAppSDK } from "@contentful/app-sdk";
-import { css } from "emotion";
+import { css } from "@emotion/css";
 
 interface ISlugFieldPatternModal {
   model: string;

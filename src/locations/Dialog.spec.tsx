@@ -1,17 +1,16 @@
-import { render } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
-import { mockCma, mockSdk } from '../../test/mocks';
 import Dialog from './Dialog';
+import { render, screen } from '@testing-library/react';
+import { mockCma, mockSdk } from '../../test/mocks';
 
-vi.mock('@contentful/react-apps-toolkit', () => ({
-  useSDK: () => mockSdk,
+jest.mock('@contentful/react-apps-toolkit', () => ({
+  useSDK: () => mockSdk(),
   useCMA: () => mockCma,
 }));
 
 describe('Dialog component', () => {
   it('Component text exists', () => {
-    const { getByText } = render(<Dialog />);
+    render(<Dialog />);
 
-    expect(getByText('Hello Dialog Component (AppId: test-app)')).toBeTruthy();
+    expect(screen.getByText('Hello Dialog Component (AppId: test-app)')).toBeInTheDocument();
   });
 });

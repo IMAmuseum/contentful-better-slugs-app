@@ -1,6 +1,6 @@
 import { FormControl, Select } from "@contentful/f36-components";
 import { useCMA } from "@contentful/react-apps-toolkit";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface IContentModelsDropdown {
   activeModel?: string;

@@ -1,7 +1,7 @@
 import { ConfigAppSDK } from "@contentful/app-sdk";
 import { FormControl, Select, TextLink } from "@contentful/f36-components";
 import { useCMA, useSDK } from "@contentful/react-apps-toolkit";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface ISlugFieldsDropdownProps {
   model: string;
