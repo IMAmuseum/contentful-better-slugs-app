@@ -18,7 +18,7 @@ export default function ContentModelsDropdown({
 
   useEffect(() => {
     const fetchModels = async () => {
-      const contentModels = await cma.contentType.getMany({ limit: 1000 });
+      const contentModels = await cma.contentType?.getMany({ limit: 1000 });
       const contentModelsDefaults = contentModels.items.reduce(
         (acc: Record<string, string>, item) => {
           acc[item.sys.id] = item.name;

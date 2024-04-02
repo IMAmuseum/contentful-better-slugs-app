@@ -73,15 +73,11 @@ const ConfigScreen = () => {
     }
   );
 
-  const locales = sdk.locales.available.sort((a, b) => {
-    if (a === sdk.locales.default) {
-      return -1;
-    } else if (b === sdk.locales.default) {
-      return 1;
-    } else {
-      return a.localeCompare(b);
-    }
-  });
+  const locales = sdk.locales ? sdk.locales?.available.sort((a, b) => {
+    if (a === sdk.locales.default) return -1;
+    if (b === sdk.locales.default) return 1;
+    return a.localeCompare(b);
+  }) : [];
 
   const onConfigure = useCallback(async () => {
     // This method will be called when a user clicks on "Install"
@@ -546,7 +542,7 @@ const ConfigScreen = () => {
                   {locales.map((locale) => (
                     <Table.Row key={locale}>
                       <Table.Cell>
-                        {sdk.locales.names[locale]}: {locale}
+                        {sdk.locales?.names[locale]}: {locale}
                       </Table.Cell>
                       <Table.Cell>
                         <TextInput
