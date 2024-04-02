@@ -41,10 +41,10 @@
     "contentful": "^10.8.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "react-scripts": "5.0.1"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@contentful/app-scripts": "1.13.2",
     "@testing-library/jest-dom": "6.1.5",
     "@testing-library/react": "14.1.2",
