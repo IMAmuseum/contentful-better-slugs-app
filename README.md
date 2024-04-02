@@ -1,3 +1,10 @@
+# Newfields modifications
+This project has been modified in the following ways:
+1) Added instance parameter for prepending string which will override the globally set prepend string. This allows us to prepend a slug path for each entry type so (for example) Event slugs will always be prepended with `calendar/`
+2) Prevent the slug field from being changed if the entry is already published AND the currently published value is not empty (this prevents content creators from changing a page's url after users have bookmarked/used the existing url. Additional modifications to the path should be down by creating additional non-canonical redirects.
+4) Replaced Vite with Jest as is standard with our other pojects
+5) Updated packages
+
 # Contentful Better Slugs App
 
 Contentful offers the functionality to automatically generate slugs based on a pre-defined field, which works well for most situations.
