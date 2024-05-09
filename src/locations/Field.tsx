@@ -350,6 +350,7 @@ const Field = () => {
         />
         <IconButton
           variant="secondary"
+          isDisabled={!canBeChanged()}
           icon={<CycleIcon />}
           onClick={() => updateSlug(locale, true)}
           aria-label="Reset slug value"
