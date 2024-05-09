@@ -71,7 +71,7 @@ const Field = () => {
     models[sdk.ids.contentType]?.patterns?.[defaultLocale];
 
   const parts = pattern
-    ?.split(/((?<!field):|\/|-)/)
+    ?.split(/((?<!field):+1|\/|-)/)
     ?.map((part: string) => part.replace(/(\[|\])/gi, "").trim());
 
   const fields: string[] = [];
@@ -90,7 +90,7 @@ const Field = () => {
       const snapshots = await sdk.cma.snapshot.getManyForEntry({ entryId: sdk.entry.getSys().id});
       const published = snapshots.items[0].snapshot;
       const publishedSlug = published.fields[sdk.field.id];
-      setPrevPubSlug(publishedSlug[sdk.field.locale] ? String(publishedSlug[sdk.field.locale]) : '');
+      setPrevPubSlug(publishedSlug?.[sdk.field.locale] ? String(publishedSlug[sdk.field.locale]) : '');
     })
   }, []);
 
@@ -250,7 +250,7 @@ const Field = () => {
               raw = sdk.entry.fields[fieldParts[1]].getValue(defaultLocale);
             }
           }
-          slug = slugify(raw, slugOptions);
+          slug = raw ? slugify(raw, slugOptions) : '';
         } else {
           raw =
             (await getReferenceFieldValue(
@@ -258,7 +258,7 @@ const Field = () => {
               fieldParts[2],
               locale
             )) || "";
-          slug = slugify(raw, slugOptions);
+          slug = raw ? slugify(raw, slugOptions) : '';
         }
 
         slugParts.push(slug);
@@ -289,7 +289,8 @@ const Field = () => {
         .replace(/\/\//g, "/")
         .replace(/\/$/, "")
         .replace(/\/-\//g, "-")
-        .replace(/\/:\//g, ":"),
+        .replace(/\/:\//g, ":")
+        .replace(/^\//, ''), // remove leading /
       locale
     );
   };
