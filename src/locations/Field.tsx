@@ -1,6 +1,7 @@
 import { FieldAppSDK } from "@contentful/app-sdk";
 import {
   Button,
+  HelpText,
   IconButton,
   Note,
   Stack,
@@ -51,7 +52,8 @@ const Field = () => {
   const {
     showWebsiteUrl = true,
     showPreviewUrl = true,
-    instancePathPrefix = ""
+    instancePathPrefix = "",
+    helpText = ""
   } = sdk.parameters.instance;
 
   if (instancePathPrefix) {
@@ -380,6 +382,8 @@ const Field = () => {
             {`${overridePathPrefix}/${value}`}
           </TextLink>
         )}
+
+        {helpText && <HelpText>{helpText}</HelpText>}
     </Stack>
   );
 };
