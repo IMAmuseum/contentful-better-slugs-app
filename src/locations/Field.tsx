@@ -90,9 +90,11 @@ const Field = () => {
   useEffect(() => {
     sdk.entry.onSysChanged(async (sys) => {
       const snapshots = await sdk.cma.snapshot.getManyForEntry({ entryId: sdk.entry.getSys().id});
-      const published = snapshots.items[0].snapshot;
-      const publishedSlug = published.fields[sdk.field.id];
-      setPrevPubSlug(publishedSlug?.[sdk.field.locale] ? String(publishedSlug[sdk.field.locale]) : '');
+      const published = snapshots.items[0]?.snapshot;
+      if (published) {
+        const publishedSlug = published.fields[sdk.field.id];
+        setPrevPubSlug(publishedSlug?.[sdk.field.locale] ? String(publishedSlug[sdk.field.locale]) : '');
+      }
     })
   }, []);
 
