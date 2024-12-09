@@ -35,7 +35,7 @@ You can find more details about hosting an [Contentful app here](https://www.con
 
 ![App Locations](./docs/app-locations.png)
 
-4. Create two instance parameters
+4. Create three instance parameters
 
 - Help Text: Type `Text`, Display name `Help text`, and id `helpText`
 - Override Show Website Url: Type: `Boolean`, Display name `Show website url`, id `showWebsiteUrl`, Default value: `true`
