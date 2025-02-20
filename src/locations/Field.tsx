@@ -215,10 +215,9 @@ const Field = () => {
     return !!sys.publishedVersion && sys.version === sys.publishedVersion + 1;
   };
 
-  // slug can be changed if previous published slug was empty
-  // or if the entry is not currently published.
+  // slug can be changed if the entry is not currently published.
   const canBeChanged = () => {
-    return !isPublished() || prevPubSlug === '';
+    return !(lockWhenPublished && isLocked());
   };
 
   const isLocked = () => {
